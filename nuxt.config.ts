@@ -44,6 +44,7 @@ export default defineNuxtConfig({
       provider: 'github',
       owner: 'apptly-dev',
       repo: 'awesome-apptly',
+      branch: 'stage',
     },
   },
 });
