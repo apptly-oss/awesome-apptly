@@ -45,8 +45,15 @@ YAML front matter validated by a Zod schema
 
 ```sh
 pnpm install
+pnpm generate         # seed the client-side content DB (see below)
 pnpm dev              # local dev server
 ```
+
+**Content DB caveat:** the cloudflare preset's content handler
+serves the SQL dump from Nitro build storage. `pnpm generate`
+(or `pnpm build`) populates that storage. Without it, client-side
+navigation will 404 because the browser's WASM SQLite has no data.
+Re-run `pnpm generate` whenever content files are added or removed.
 
 ## Build and deploy
 

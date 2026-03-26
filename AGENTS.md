@@ -37,6 +37,14 @@ language:
 ---
 ```
 
+## Content DB in development
+
+After adding or removing content files, run `pnpm generate`
+before `pnpm dev`. The cloudflare preset serves the client-side
+SQL dump from Nitro build storage, which only `generate` (or
+`build`) populates. Without this step, SSR works but client-side
+navigation will 404.
+
 ## Branch workflow
 
 - Work on `main` for code changes.
