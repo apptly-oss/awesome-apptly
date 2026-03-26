@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
+
+/* MDC prose styling for content pages */
+.prose {
+  @apply max-w-none;
+}
+
+.prose table {
+  @apply w-full text-sm;
+}
+
+.prose th {
+  @apply text-left font-semibold;
+}
+
+.prose td,
+.prose th {
+  @apply border-b border-gray-200 px-2 py-2;
+}
+
+.prose a {
+  @apply text-blue-600 hover:text-blue-800;
+}
+
+.prose code:not(pre code) {
+  @apply rounded bg-gray-100 px-1 py-0.5 text-sm;
+}
