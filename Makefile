@@ -1,4 +1,4 @@
-.PHONY: all dev build clean check-spelling lint test
+.PHONY: all dev build clean check-spelling lint
 .PHONY: FORCE
 
 TOOLSDIR := $(CURDIR)/internal/build
@@ -43,9 +43,6 @@ lint: node_modules/.modules.yaml ; $(info $(M) linting…)
 	$Q $(PNPM) lint
 
 tidy: fmt lint $(TIDY_SPELLING)
-
-test: node_modules/.modules.yaml ; $(info $(M) running tests…)
-	$Q $(PNPM) prepack
 
 node_modules/.modules.yaml: package.json pnpm-lock.yaml
 	$Q $(PNPM) install

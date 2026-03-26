@@ -28,6 +28,6 @@ jobs:
 
       - run: pnpm install
 
-      - run: make test
+      - run: pnpm check
 
-      - run: make build
+      - run: pnpm build

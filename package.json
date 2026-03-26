@@ -9,17 +9,15 @@
   },
   "scripts": {
     "build": "nuxt build",
+    "check": "run-s generate lint:check typecheck",
     "clean": "rimraf .output .nuxt .wrangler node_modules",
     "deploy": "wrangler deploy",
     "dev": "nuxt dev --dotenv .env.local",
-    "dev:cf": "wrangler dev",
     "generate": "nuxt generate",
     "lint": "eslint . --fix",
     "lint:check": "eslint .",
     "precommit": "run-s generate lint typecheck",
-    "prepack": "run-s generate lint:check typecheck",
     "prepare": "nuxt prepare",
-    "preview": "wrangler dev",
     "typecheck": "nuxi typecheck"
   },
   "dependencies": {
