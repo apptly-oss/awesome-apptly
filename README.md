@@ -18,15 +18,27 @@ open-source projects, live at <https://awesome-apptly.com>.
 
 ## Content model
 
-Project entries live in `content/projects/*.md`. Each file has
-YAML front matter validated by a Zod schema
-(`content.config.ts`):
+Two collections defined in `content.config.ts`:
+
+### Categories (`content/categories/*.md`)
+
+Each file defines a category. The filename (minus `.md`) is the
+slug used in project front matter and URLs. Adding or removing a
+file updates the Zod enum automatically (derived via `readdirSync`).
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `title` | string | display name |
+| `description` | string | short description |
+| `org` | string? | GitHub org — present on umbrella categories (kagal, darvaza, poupe) |
+
+### Projects (`content/projects/*.md`)
 
 | Field | Type | Values |
 |-------|------|--------|
 | `title` | string | inherited from Nuxt Content's `page` type |
 | `description` | string | inherited from Nuxt Content's `page` type |
-| `category` | enum array | `darvaza`, `kagal`, `poupe`, `infrastructure`, `networking`, `security`, `tooling`, `ui` |
+| `category` | enum array | one or more category slugs from `content/categories/` |
 | `language` | enum array | `Go`, `TypeScript` |
 
 ## Branching model

@@ -14,15 +14,38 @@ content model, branching model, and commands.
 
 ## Content schema
 
-Project entries (`content/projects/*.md`) must include front
+### Categories
+
+Category definitions live in `content/categories/*.md`. The
+filename is the slug. The Zod enum in `content.config.ts` is
+derived from these filenames — adding a file extends the enum.
+
+Umbrella categories have an `org` field (GitHub org name):
+
+```yaml
+---
+title: "Kagal"
+description: "TypeScript libraries for Cloudflare edge infrastructure."
+org: "kagal-dev"
+---
+```
+
+Cross-cutting categories omit `org`:
+
+```yaml
+---
+title: "Security"
+description: "Cryptography, authentication, and PKI."
+---
+```
+
+### Projects
+
+Project entries live in `content/projects/*.md` with front
 matter matching the Zod schema in `content.config.ts`.
 
-Valid values for `category`: `darvaza`, `kagal`, `poupe`,
-`infrastructure`, `networking`, `security`, `tooling`, `ui`.
-
 Valid values for `language`: `Go`, `TypeScript`.
-
-Both fields are arrays (one or more values):
+`category` accepts one or more slugs from `content/categories/`.
 
 ```yaml
 ---

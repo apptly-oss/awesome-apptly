@@ -35,6 +35,7 @@ if (!page.value) {
       class="mt-3"
       :categories="page.category"
       :languages="page.language"
+      linked
     />
 
     <div class="prose mt-8">
