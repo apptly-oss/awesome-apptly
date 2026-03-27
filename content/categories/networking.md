@@ -1,4 +1,4 @@
 ---
-title: "Networking"
-description: "Protocols, transports, and connectivity."
+title: Networking
+description: Protocols, transports, and connectivity.
 ---

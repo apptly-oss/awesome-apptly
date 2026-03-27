@@ -1,7 +1,7 @@
 ---
-title: "Kagal"
-description: "TypeScript libraries for Cloudflare edge infrastructure."
-org: "kagal-dev"
+title: Kagal
+description: TypeScript libraries for Cloudflare edge infrastructure.
+kind: umbrella
 ---
 
 Named after the Sumerian *Ká.Gal* (𒆍𒃲, "Great Gate"), Kagal is a

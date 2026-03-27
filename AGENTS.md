@@ -20,32 +20,17 @@ Category definitions live in `content/categories/*.md`. The
 filename is the slug. The Zod enum in `content.config.ts` is
 derived from these filenames — adding a file extends the enum.
 
-Umbrella categories have an `org` field (GitHub org name):
+The `kind` field controls sorting and grouping:
+
+- `umbrella` — top-level project families (Kagal, Darvaza, Poupe).
+- `language` — programming languages (Go, TypeScript).
+- omitted — cross-cutting topics (Security, Networking, Tooling).
 
 ```yaml
 ---
 title: Kagal
 description: TypeScript libraries for Cloudflare edge infrastructure.
-org: kagal-dev
----
-```
-
-Cross-cutting categories omit `org`:
-
-```yaml
----
-title: Security
-description: Cryptography, authentication, and PKI.
----
-```
-
-Language categories use `kind: language`:
-
-```yaml
----
-title: Go
-description: Projects written in Go.
-kind: language
+kind: umbrella
 ---
 ```
 
@@ -57,6 +42,13 @@ matter matching the Zod schema in `content.config.ts`.
 `category` accepts one or more slugs from `content/categories/`,
 including language categories (`go`, `typescript`).
 
+Optional metadata fields for badges and links:
+
+- `repo` — source link as `github:{owner/repo[/dir]}`.
+- `licence` — SPDX identifier (e.g. `MIT`, `Apache-2.0`).
+- `npm` — npm package name for a registry version badge.
+- `go` — Go module path for a pkg.go.dev badge.
+
 ```yaml
 ---
 title: Project Name
@@ -66,6 +58,10 @@ category:
   - infrastructure
   - go
   - typescript
+repo: github:kagal-dev/example
+licence: MIT
+npm: "@kagal/example"
+go: github.com/kagal-dev/example
 ---
 ```
 

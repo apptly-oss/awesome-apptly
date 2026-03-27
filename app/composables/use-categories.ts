@@ -8,8 +8,8 @@ export async function useCategories() {
   // Umbrella categories first, then cross-cutting topics, then languages.
   const sorted = computed(() => {
     if (!all.value) return [];
-    const umbrellas = all.value.filter((c) => c.org);
-    const topics = all.value.filter((c) => !c.org && c.kind !== 'language');
+    const umbrellas = all.value.filter((c) => c.kind === 'umbrella');
+    const topics = all.value.filter((c) => !c.kind);
     const languages = all.value.filter((c) => c.kind === 'language');
     return [...umbrellas, ...topics, ...languages];
   });
@@ -19,11 +19,11 @@ export async function useCategories() {
   }
 
   function isUmbrella(c: NonNullable<typeof all.value>[number]): boolean {
-    return !!c.org;
+    return c.kind === 'umbrella';
   }
 
   const umbrellaSlugs = computed(() =>
-    sorted.value.filter((c) => c.org).map((c) => slug(c)));
+    sorted.value.filter((c) => c.kind === 'umbrella').map((c) => slug(c)));
 
   const languageSlugs = computed(() =>
     sorted.value.filter((c) => c.kind === 'language').map((c) => slug(c)));

@@ -1,7 +1,7 @@
 ---
-title: "Darvaza"
-description: "Go proxy and networking libraries."
-org: "darvaza-proxy"
+title: Darvaza
+description: Go proxy and networking libraries.
+kind: umbrella
 ---
 
 A family of Go libraries for building proxies and networking

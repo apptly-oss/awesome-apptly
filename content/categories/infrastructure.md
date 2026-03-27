@@ -1,4 +1,4 @@
 ---
-title: "Infrastructure"
-description: "Deployment, orchestration, and platform tooling."
+title: Infrastructure
+description: Deployment, orchestration, and platform tooling.
 ---

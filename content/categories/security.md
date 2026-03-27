@@ -1,4 +1,4 @@
 ---
-title: "Security"
-description: "Cryptography, authentication, and PKI."
+title: Security
+description: Cryptography, authentication, and PKI.
 ---

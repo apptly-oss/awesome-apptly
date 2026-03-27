@@ -18,8 +18,7 @@ export default defineContentConfig({
         include: 'categories/*.md',
       },
       schema: z.object({
-        org: z.string().optional(),
-        kind: z.enum(['language']).optional(),
+        kind: z.enum(['umbrella', 'language']).optional(),
       }),
     }),
     projects: defineCollection({
@@ -30,6 +29,10 @@ export default defineContentConfig({
       },
       schema: z.object({
         category: z.array(z.enum(categories)),
+        repo: z.string().optional(),
+        licence: z.string().optional(),
+        npm: z.string().optional(),
+        go: z.string().optional(),
       }),
     }),
   },
