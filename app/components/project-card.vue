@@ -24,8 +24,9 @@ defineProps<{
         class="flex shrink-0 items-center gap-1.5 text-xs text-gray-400"
       >
         <span v-if="licence">{{ licence }}</span>
-        <IconGithub
+        <Icon
           v-if="repo"
+          name="simple-icons:github"
           class="h-4 w-4"
         />
       </span>

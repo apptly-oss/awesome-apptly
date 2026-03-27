@@ -7,6 +7,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/content',
     '@nuxt/eslint',
+    '@nuxt/icon',
     'nuxt-studio',
   ],
   devtools: { enabled: isDevelopment },
@@ -37,6 +38,11 @@ export default defineNuxtConfig({
   eslint: {
     config: {
       stylistic: true,
+    },
+  },
+  icon: {
+    clientBundle: {
+      scan: true,
     },
   },
   studio: {

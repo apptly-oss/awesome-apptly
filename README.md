@@ -12,6 +12,8 @@ open-source projects, live at <https://awesome-apptly.com>.
 | Hosting | [Cloudflare Workers](https://developers.cloudflare.com/workers/) (`cloudflare-module` preset) |
 | Database | [Cloudflare D1](https://developers.cloudflare.com/d1/) (content database) |
 | Styling | [Tailwind CSS 4](https://tailwindcss.com) + `@tailwindcss/typography` |
+| Icons | [`@nuxt/icon`](https://nuxt.com/modules/icon) + `@iconify-json/simple-icons` |
+| Badges | [`badge-maker`](https://github.com/badges/shields/tree/master/badge-maker) (self-hosted SVG badges, logos inlined as base64) |
 | Editor | [Nuxt Studio](https://nuxt.studio) ~1.4 (browser-based content editing) |
 | Lint | [ESLint 9](https://eslint.org) + `@poupe/eslint-config` |
 | CI | GitHub Actions |
@@ -41,8 +43,8 @@ file updates the Zod enum automatically (derived via `readdirSync`).
 | `category` | enum array | one or more category slugs from `content/categories/` (including languages) |
 | `repo` | string? | source link as `github:{owner/repo[/dir]}` |
 | `licence` | string? | SPDX identifier (e.g. `MIT`, `Apache-2.0`) |
-| `npm` | string? | npm package name for registry badge |
-| `go` | string? | Go module path for pkg.go.dev badge |
+| `npm` | string? | npm package name — self-hosted version badge via `/api/badge/npm/` |
+| `go` | string? | Go module path — self-hosted version badge via `/api/badge/go/` |
 
 ## Branching model
 

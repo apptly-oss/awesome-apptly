@@ -22,7 +22,10 @@ const repoInfo = computed(() =>
       rel="noopener"
       class="inline-flex items-center gap-1.5 text-gray-600 hover:text-gray-900"
     >
-      <IconGithub class="h-4 w-4" />
+      <Icon
+        name="simple-icons:github"
+        class="h-4 w-4"
+      />
       {{ repoInfo.label }}
     </a>
     <span
@@ -31,29 +34,19 @@ const repoInfo = computed(() =>
     >
       {{ licence }}
     </span>
-    <a
+    <BadgeVersion
       v-if="npm"
+      :src="`/api/badge/npm/${npm}`"
       :href="`https://www.npmjs.com/package/${npm}`"
-      target="_blank"
-      rel="noopener"
-    >
-      <img
-        :src="`https://img.shields.io/npm/v/${npm}.svg`"
-        :alt="`npm version for ${npm}`"
-        class="h-5"
-      >
-    </a>
-    <a
+      :alt="`npm version for ${npm}`"
+      :title="`npm package ${npm}`"
+    />
+    <BadgeVersion
       v-if="go"
+      :src="`/api/badge/go/${go}`"
       :href="`https://pkg.go.dev/${go}`"
-      target="_blank"
-      rel="noopener"
-    >
-      <img
-        :src="`https://pkg.go.dev/badge/${go}.svg`"
-        :alt="`Go reference for ${go}`"
-        class="h-5"
-      >
-    </a>
+      :alt="`Go reference for ${go}`"
+      :title="`Go reference for ${go}`"
+    />
   </div>
 </template>

@@ -46,8 +46,8 @@ Optional metadata fields for badges and links:
 
 - `repo` — source link as `github:{owner/repo[/dir]}`.
 - `licence` — SPDX identifier (e.g. `MIT`, `Apache-2.0`).
-- `npm` — npm package name for a registry version badge.
-- `go` — Go module path for a pkg.go.dev badge.
+- `npm` — npm package name for a self-hosted version badge.
+- `go` — Go module path for a self-hosted version badge.
 
 ```yaml
 ---
@@ -64,6 +64,35 @@ npm: "@kagal/example"
 go: github.com/kagal-dev/example
 ---
 ```
+
+## Badge API
+
+Self-hosted SVG version badges rendered by `badge-maker` with
+pre-computed logo data URIs (extracted from `simple-icons` at
+development time, inlined as base64 constants to avoid bundling the
+full icon library into the Nitro server). The shared rendering logic
+lives in `server/utils/badge.ts` (Nitro auto-imports it).
+
+### Endpoints
+
+- `/api/badge/go/{module}` — fetches version from
+  `proxy.golang.org/{module}/@latest`. Validates the path
+  matches a Go module pattern (domain with dot in first segment).
+- `/api/badge/npm/{package}` — fetches version from
+  `registry.npmjs.org/{package}/latest`. Validates the name
+  matches npm naming rules (`@scope/name` or `name`).
+
+Both endpoints return `image/svg+xml` with cache headers (1 hour
+for successful responses, 60 seconds for errors). Unknown packages
+render a grey "unknown" badge instead of erroring.
+
+### Components
+
+- `BadgeVersion` — generic badge `<img>` wrapper with loading
+  skeleton, error fallback (shows alt text), and SSR hydration
+  handling (`onMounted` checks `complete` + `naturalWidth`).
+- Icons use `@nuxt/icon` with `<Icon name="simple-icons:github" />`
+  instead of hand-rolled SVG components.
 
 ## Content DB in development
 
