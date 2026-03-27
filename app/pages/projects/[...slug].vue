@@ -40,6 +40,14 @@ const { languageSlugs } = await useCategories();
       linked
     />
 
+    <ProjectMeta
+      class="mt-4"
+      :repo="page.repo"
+      :licence="page.licence"
+      :npm="page.npm"
+      :go="page.go"
+    />
+
     <div class="prose mt-8">
       <ContentRenderer :value="page" />
     </div>

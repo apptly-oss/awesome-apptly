@@ -177,6 +177,8 @@ useHead({ title });
           :description="project.description"
           :category="project.category"
           :language-slugs="languageSlugs"
+          :repo="project.repo"
+          :licence="project.licence"
         />
       </li>
     </ul>

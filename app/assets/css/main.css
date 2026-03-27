@@ -25,8 +25,13 @@
 
 /* Badge component */
 .badge-category,
-.badge-language {
+.badge-language,
+.badge-licence {
   @apply rounded-full px-2.5 py-0.5 text-xs font-medium;
+}
+
+.badge-licence {
+  @apply bg-gray-100 text-gray-700;
 }
 
 .badge-category {

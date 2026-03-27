@@ -8,6 +8,8 @@ defineProps<{
     title: string
     description?: string
     category: string[]
+    repo?: string
+    licence?: string
   }>
   languageSlugs: string[]
 }>();
@@ -40,6 +42,8 @@ defineProps<{
           :description="project.description"
           :category="project.category"
           :language-slugs="languageSlugs"
+          :repo="project.repo"
+          :licence="project.licence"
         />
       </li>
     </ul>
