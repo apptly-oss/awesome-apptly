@@ -5,12 +5,13 @@ export async function useCategories() {
       .all();
   });
 
-  // Umbrella categories (have org) come first, then the rest.
+  // Umbrella categories first, then cross-cutting topics, then languages.
   const sorted = computed(() => {
     if (!all.value) return [];
     const umbrellas = all.value.filter((c) => c.org);
-    const rest = all.value.filter((c) => !c.org);
-    return [...umbrellas, ...rest];
+    const topics = all.value.filter((c) => !c.org && c.kind !== 'language');
+    const languages = all.value.filter((c) => c.kind === 'language');
+    return [...umbrellas, ...topics, ...languages];
   });
 
   function slug(c: NonNullable<typeof all.value>[number]): string {
@@ -24,6 +25,9 @@ export async function useCategories() {
   const umbrellaSlugs = computed(() =>
     sorted.value.filter((c) => c.org).map((c) => slug(c)));
 
+  const languageSlugs = computed(() =>
+    sorted.value.filter((c) => c.kind === 'language').map((c) => slug(c)));
+
   function find(name: string) {
     return all.value?.find((c) => slug(c) === name) ?? undefined;
   }
@@ -36,5 +40,5 @@ export async function useCategories() {
     return umbrellaSlugs.value.some((u) => categories.includes(u));
   }
 
-  return { all, sorted, slug, isUmbrella, umbrellaSlugs, find, isValid, isUnderUmbrella };
+  return { all, sorted, slug, isUmbrella, umbrellaSlugs, languageSlugs, find, isValid, isUnderUmbrella };
 }

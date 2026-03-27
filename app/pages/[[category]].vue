@@ -3,7 +3,7 @@ definePageMeta({ key: (route) => route.path });
 
 const route = useRoute();
 const category = computed(() => route.params.category as string | undefined);
-const { sorted, slug, isUmbrella, find, isValid, isUnderUmbrella } = await useCategories();
+const { sorted, slug, isUmbrella, find, isValid, isUnderUmbrella, languageSlugs } = await useCategories();
 
 // Validate category param.
 if (category.value && !isValid(category.value)) {
@@ -17,6 +17,23 @@ const { data: projects } = await useAsyncData(() => 'projects', () => {
 });
 
 type Project = NonNullable<typeof projects.value>[number];
+
+const hasOther = computed(() =>
+  projects.value?.some((p) => !isUnderUmbrella(p.category)) ?? false);
+
+interface NavPill { title: string; href: string; kind?: string }
+
+const umbrellas = computed<NavPill[]>(() => {
+  const items: NavPill[] = sorted.value
+    .filter((c) => isUmbrella(c))
+    .map((c) => ({ title: c.title, href: `/${slug(c)}` }));
+  if (hasOther.value) {
+    items.push({ title: 'Other', href: `/${OTHER_SLUG}` });
+  }
+  return items;
+});
+const languages = computed(() => sorted.value.filter((c) => c.kind === 'language'));
+const topics = computed(() => sorted.value.filter((c) => !c.kind));
 
 // Filtered view: single category.
 const filtered = computed(() => {
@@ -105,27 +122,44 @@ useHead({ title });
     </div>
 
     <!-- Category filter nav -->
-    <nav class="flex flex-wrap gap-2">
-      <NuxtLink
-        to="/"
-        class="rounded-full px-3 py-1 text-sm font-medium transition"
-        :class="!category
-          ? 'bg-blue-600 text-white'
-          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+    <nav class="space-y-2">
+      <div class="flex flex-wrap gap-2">
+        <NuxtLink
+          to="/"
+          class="pill pill-category"
+        >
+          All
+        </NuxtLink>
+        <NuxtLink
+          v-for="pill in umbrellas"
+          :key="pill.href"
+          :to="pill.href"
+          class="pill pill-category"
+        >
+          {{ pill.title }}
+        </NuxtLink>
+        <NuxtLink
+          v-for="cat in languages"
+          :key="slug(cat)"
+          :to="`/${slug(cat)}`"
+          class="pill pill-language"
+        >
+          {{ cat.title }}
+        </NuxtLink>
+      </div>
+      <div
+        v-if="topics.length > 0"
+        class="flex flex-wrap gap-2"
       >
-        All
-      </NuxtLink>
-      <NuxtLink
-        v-for="cat in sorted"
-        :key="slug(cat)"
-        :to="`/${slug(cat)}`"
-        class="rounded-full px-3 py-1 text-sm font-medium transition"
-        :class="category === slug(cat)
-          ? 'bg-blue-600 text-white'
-          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
-      >
-        {{ cat.title }}
-      </NuxtLink>
+        <NuxtLink
+          v-for="cat in topics"
+          :key="slug(cat)"
+          :to="`/${slug(cat)}`"
+          class="pill pill-category"
+        >
+          {{ cat.title }}
+        </NuxtLink>
+      </div>
     </nav>
 
     <!-- Filtered view: single category -->
@@ -142,7 +176,7 @@ useHead({ title });
           :title="project.title"
           :description="project.description"
           :category="project.category"
-          :language="project.language"
+          :language-slugs="languageSlugs"
         />
       </li>
     </ul>
@@ -156,6 +190,7 @@ useHead({ title });
         :href="group.href"
         :description="group.description"
         :projects="group.projects"
+        :language-slugs="languageSlugs"
       />
     </template>
   </div>

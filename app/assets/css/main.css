@@ -2,6 +2,49 @@
 
 @plugin "@tailwindcss/typography";
 
+/* Nav pill component */
+.pill {
+  @apply rounded-full px-3 py-1 text-sm font-medium transition;
+}
+
+.pill-category {
+  @apply bg-gray-100 text-gray-700 hover:bg-gray-200;
+}
+
+.pill-category[aria-current] {
+  @apply bg-blue-600 text-white hover:bg-blue-600;
+}
+
+.pill-language {
+  @apply bg-green-50 text-green-800 hover:bg-green-100;
+}
+
+.pill-language[aria-current] {
+  @apply bg-green-600 text-white hover:bg-green-600;
+}
+
+/* Badge component */
+.badge-category,
+.badge-language {
+  @apply rounded-full px-2.5 py-0.5 text-xs font-medium;
+}
+
+.badge-category {
+  @apply bg-blue-100 text-blue-800;
+}
+
+.badge-language {
+  @apply bg-green-100 text-green-800;
+}
+
+a.badge-category:hover {
+  @apply bg-blue-200;
+}
+
+a.badge-language:hover {
+  @apply bg-green-200;
+}
+
 /* MDC prose styling for content pages */
 .prose {
   @apply max-w-none;

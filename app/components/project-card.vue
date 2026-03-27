@@ -4,7 +4,7 @@ defineProps<{
   title: string
   description?: string
   category: string[]
-  language: string[]
+  languageSlugs: string[]
 }>();
 </script>
 
@@ -25,7 +25,7 @@ defineProps<{
     <BadgeList
       class="mt-2"
       :categories="category"
-      :languages="language"
+      :language-slugs="languageSlugs"
     />
   </NuxtLink>
 </template>

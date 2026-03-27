@@ -9,8 +9,6 @@ const categories = readdirSync(resolve('content/categories'))
   .toSorted()
   .map((f) => f.replace('.md', '')) as [string, ...string[]];
 
-const languages = ['Go', 'TypeScript'] as const;
-
 export default defineContentConfig({
   collections: {
     categories: defineCollection({
@@ -21,6 +19,7 @@ export default defineContentConfig({
       },
       schema: z.object({
         org: z.string().optional(),
+        kind: z.enum(['language']).optional(),
       }),
     }),
     projects: defineCollection({
@@ -31,7 +30,6 @@ export default defineContentConfig({
       },
       schema: z.object({
         category: z.array(z.enum(categories)),
-        language: z.array(z.enum(languages)),
       }),
     }),
   },

@@ -31,6 +31,7 @@ file updates the Zod enum automatically (derived via `readdirSync`).
 | `title` | string | display name |
 | `description` | string | short description |
 | `org` | string? | GitHub org — present on umbrella categories (kagal, darvaza, poupe) |
+| `kind` | `"language"`? | marks language categories (go, typescript) |
 
 ### Projects (`content/projects/*.md`)
 
@@ -38,8 +39,7 @@ file updates the Zod enum automatically (derived via `readdirSync`).
 |-------|------|--------|
 | `title` | string | inherited from Nuxt Content's `page` type |
 | `description` | string | inherited from Nuxt Content's `page` type |
-| `category` | enum array | one or more category slugs from `content/categories/` |
-| `language` | enum array | `Go`, `TypeScript` |
+| `category` | enum array | one or more category slugs from `content/categories/` (including languages) |
 
 ## Branching model
 

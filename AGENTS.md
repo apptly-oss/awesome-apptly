@@ -24,9 +24,9 @@ Umbrella categories have an `org` field (GitHub org name):
 
 ```yaml
 ---
-title: "Kagal"
-description: "TypeScript libraries for Cloudflare edge infrastructure."
-org: "kagal-dev"
+title: Kagal
+description: TypeScript libraries for Cloudflare edge infrastructure.
+org: kagal-dev
 ---
 ```
 
@@ -34,8 +34,18 @@ Cross-cutting categories omit `org`:
 
 ```yaml
 ---
-title: "Security"
-description: "Cryptography, authentication, and PKI."
+title: Security
+description: Cryptography, authentication, and PKI.
+---
+```
+
+Language categories use `kind: language`:
+
+```yaml
+---
+title: Go
+description: Projects written in Go.
+kind: language
 ---
 ```
 
@@ -44,19 +54,18 @@ description: "Cryptography, authentication, and PKI."
 Project entries live in `content/projects/*.md` with front
 matter matching the Zod schema in `content.config.ts`.
 
-Valid values for `language`: `Go`, `TypeScript`.
-`category` accepts one or more slugs from `content/categories/`.
+`category` accepts one or more slugs from `content/categories/`,
+including language categories (`go`, `typescript`).
 
 ```yaml
 ---
-title: "Project Name"
-description: "Short description."
+title: Project Name
+description: Short description.
 category:
   - networking
   - infrastructure
-language:
-  - Go
-  - TypeScript
+  - go
+  - typescript
 ---
 ```
 
@@ -67,6 +76,14 @@ before `pnpm dev`. The cloudflare preset serves the client-side
 SQL dump from Nitro build storage, which only `generate` (or
 `build`) populates. Without this step, SSR works but client-side
 navigation will 404.
+
+## Dev server management
+
+Start the dev server as a background task (`pnpm dev --host`
+with `run_in_background`). Stop it with `TaskStop` — this sends
+SIGTERM to the entire process group, cleanly shutting down
+pnpm, nuxt, and all child workers without orphans. Port 3000
+is reusable immediately after stopping.
 
 ## Branch workflow
 

@@ -10,6 +10,8 @@ const { data: page } = await useAsyncData(() => 'page-' + route.path, () => {
 if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true });
 }
+
+const { languageSlugs } = await useCategories();
 </script>
 
 <template>
@@ -34,7 +36,7 @@ if (!page.value) {
     <BadgeList
       class="mt-3"
       :categories="page.category"
-      :languages="page.language"
+      :language-slugs="languageSlugs"
       linked
     />
 
