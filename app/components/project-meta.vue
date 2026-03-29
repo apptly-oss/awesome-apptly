@@ -34,19 +34,13 @@ const repoInfo = computed(() =>
     >
       {{ licence }}
     </span>
-    <BadgeVersion
+    <BadgeVersionNpm
       v-if="npm"
-      :src="`/api/badge/npm/${npm}`"
-      :href="`https://www.npmjs.com/package/${npm}`"
-      :alt="`npm version for ${npm}`"
-      :title="`npm package ${npm}`"
+      :pkg="npm"
     />
-    <BadgeVersion
+    <BadgeVersionGo
       v-if="go"
-      :src="`/api/badge/go/${go}`"
-      :href="`https://pkg.go.dev/${go}`"
-      :alt="`Go reference for ${go}`"
-      :title="`Go reference for ${go}`"
+      :mod="go"
     />
   </div>
 </template>
