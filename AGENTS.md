@@ -14,28 +14,101 @@ content model, branching model, and commands.
 
 ## Content schema
 
-Project entries (`content/projects/*.md`) must include front
-matter matching the Zod schema in `content.config.ts`.
+### Categories
 
-Valid values for `category`: `darvaza`, `kagal`, `poupe`,
-`infrastructure`, `networking`, `security`, `tooling`, `ui`.
+Category definitions live in `content/categories/*.md`. The
+filename is the slug. The Zod enum in `content.config.ts` is
+derived from these filenames — adding a file extends the enum.
 
-Valid values for `language`: `Go`, `TypeScript`.
+The `kind` field controls sorting and grouping:
 
-Both fields are arrays (one or more values):
+- `umbrella` — top-level project families (Kagal, Darvaza, Poupe).
+- `language` — programming languages (Go, TypeScript).
+- omitted — cross-cutting topics (Security, Networking, Tooling).
 
 ```yaml
 ---
-title: "Project Name"
-description: "Short description."
+title: Kagal
+description: TypeScript libraries for Cloudflare edge infrastructure.
+kind: umbrella
+---
+```
+
+### Projects
+
+Project entries live in `content/projects/*.md` with front
+matter matching the Zod schema in `content.config.ts`.
+
+`category` accepts one or more slugs from `content/categories/`,
+including language categories (`go`, `typescript`).
+
+Optional metadata fields for badges and links:
+
+- `repo` — source link as `github:{owner/repo[/dir]}`.
+- `licence` — SPDX identifier (e.g. `MIT`, `Apache-2.0`).
+- `npm` — npm package name for a self-hosted version badge.
+- `go` — Go module path for a self-hosted version badge.
+
+```yaml
+---
+title: Project Name
+description: Short description.
 category:
   - networking
   - infrastructure
-language:
-  - Go
-  - TypeScript
+  - go
+  - typescript
+repo: github:kagal-dev/example
+licence: MIT
+npm: "@kagal/example"
+go: github.com/kagal-dev/example
 ---
 ```
+
+## Badge API
+
+Self-hosted SVG version badges rendered by `badge-maker` with
+pre-computed logo data URIs (extracted from `simple-icons` at
+development time, inlined as base64 constants to avoid bundling the
+full icon library into the Nitro server). The shared rendering logic
+lives in `server/utils/badge.ts` (Nitro auto-imports it).
+
+### Endpoints
+
+- `/api/badge/go/{module}` — fetches version from
+  `proxy.golang.org/{module}/@latest`. Validates the path
+  matches a Go module pattern (domain with dot in first segment).
+- `/api/badge/npm/{package}` — fetches version from
+  `registry.npmjs.org/{package}/latest`. Validates the name
+  matches npm naming rules (`@scope/name` or `name`).
+
+Both endpoints return `image/svg+xml` with cache headers (1 hour
+for successful responses, 60 seconds for errors). Unknown packages
+render a grey "unknown" badge instead of erroring.
+
+### Components
+
+- `BadgeVersion` — generic badge `<img>` wrapper with loading
+  skeleton, error fallback (shows alt text), and SSR hydration
+  handling (`onMounted` checks `complete` + `naturalWidth`).
+- Icons use `@nuxt/icon` with `<Icon name="simple-icons:github" />`
+  instead of hand-rolled SVG components.
+
+## Content DB in development
+
+After adding or removing content files, run `pnpm generate`
+before `pnpm dev`. The cloudflare preset serves the client-side
+SQL dump from Nitro build storage, which only `generate` (or
+`build`) populates. Without this step, SSR works but client-side
+navigation will 404.
+
+## Dev server management
+
+Start the dev server as a background task (`pnpm dev --host`
+with `run_in_background`). Stop it with `TaskStop` — this sends
+SIGTERM to the entire process group, cleanly shutting down
+pnpm, nuxt, and all child workers without orphans. Port 3000
+is reusable immediately after stopping.
 
 ## Branch workflow
 

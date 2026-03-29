@@ -1,10 +1,9 @@
 ---
-title: "Example Project"
-description: "A placeholder project to demonstrate the content schema."
+title: Example Project
+description: A placeholder project to demonstrate the content schema.
 category:
   - tooling
-language:
-  - TypeScript
+  - typescript
 ---
 
 This is a placeholder project entry. Replace it with a real project.

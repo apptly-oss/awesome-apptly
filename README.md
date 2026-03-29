@@ -12,22 +12,39 @@ open-source projects, live at <https://awesome-apptly.com>.
 | Hosting | [Cloudflare Workers](https://developers.cloudflare.com/workers/) (`cloudflare-module` preset) |
 | Database | [Cloudflare D1](https://developers.cloudflare.com/d1/) (content database) |
 | Styling | [Tailwind CSS 4](https://tailwindcss.com) + `@tailwindcss/typography` |
+| Icons | [`@nuxt/icon`](https://nuxt.com/modules/icon) + `@iconify-json/simple-icons` |
+| Badges | [`badge-maker`](https://github.com/badges/shields/tree/master/badge-maker) (self-hosted SVG badges, logos inlined as base64) |
 | Editor | [Nuxt Studio](https://nuxt.studio) ~1.4 (browser-based content editing) |
 | Lint | [ESLint 9](https://eslint.org) + `@poupe/eslint-config` |
 | CI | GitHub Actions |
 
 ## Content model
 
-Project entries live in `content/projects/*.md`. Each file has
-YAML front matter validated by a Zod schema
-(`content.config.ts`):
+Two collections defined in `content.config.ts`:
+
+### Categories (`content/categories/*.md`)
+
+Each file defines a category. The filename (minus `.md`) is the
+slug used in project front matter and URLs. Adding or removing a
+file updates the Zod enum automatically (derived via `readdirSync`).
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `title` | string | display name |
+| `description` | string | short description |
+| `kind` | `"umbrella"` \| `"language"`? | umbrella = project family, language = programming language |
+
+### Projects (`content/projects/*.md`)
 
 | Field | Type | Values |
 |-------|------|--------|
 | `title` | string | inherited from Nuxt Content's `page` type |
 | `description` | string | inherited from Nuxt Content's `page` type |
-| `category` | enum array | `darvaza`, `kagal`, `poupe`, `infrastructure`, `networking`, `security`, `tooling`, `ui` |
-| `language` | enum array | `Go`, `TypeScript` |
+| `category` | enum array | one or more category slugs from `content/categories/` (including languages) |
+| `repo` | string? | source link as `github:{owner/repo[/dir]}` |
+| `licence` | string? | SPDX identifier (e.g. `MIT`, `Apache-2.0`) |
+| `npm` | string? | npm package name — self-hosted version badge via `/api/badge/npm/` |
+| `go` | string? | Go module path — self-hosted version badge via `/api/badge/go/` |
 
 ## Branching model
 
@@ -45,8 +62,15 @@ YAML front matter validated by a Zod schema
 
 ```sh
 pnpm install
+pnpm generate         # seed the client-side content DB (see below)
 pnpm dev              # local dev server
 ```
+
+**Content DB caveat:** the cloudflare preset's content handler
+serves the SQL dump from Nitro build storage. `pnpm generate`
+(or `pnpm build`) populates that storage. Without it, client-side
+navigation will 404 because the browser's WASM SQLite has no data.
+Re-run `pnpm generate` whenever content files are added or removed.
 
 ## Build and deploy
 
