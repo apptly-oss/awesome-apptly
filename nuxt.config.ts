@@ -28,11 +28,20 @@ export default defineNuxtConfig({
   },
   vite: {
     plugins: [tailwindcss()],
-    optimizeDeps: {
-      include: [],
-    },
     build: {
       sourcemap: isDevelopment,
+    },
+  },
+  hooks: {
+    'vite:extendConfig'(config) {
+      // @nuxtjs/mdc pushes remark/rehype entries into optimizeDeps.include
+      // after config merges, but they're unresolvable (server-only deps).
+      const include = config.optimizeDeps?.include;
+      if (include) {
+        config.optimizeDeps!.include = include.filter(
+          (entry: string) => !entry.includes('@nuxtjs/mdc >'),
+        );
+      }
     },
   },
   eslint: {
