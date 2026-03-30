@@ -1,12 +1,14 @@
 <script setup lang="ts">
 const props = defineProps<{
   mod: string
+  dir?: string
 }>();
 
+const pkg = computed(() => props.dir ? `${props.mod}/${props.dir}` : props.mod);
 const source = computed(() => `/api/badge/go/${props.mod}`);
-const href = computed(() => `https://pkg.go.dev/${props.mod}`);
-const alt = computed(() => `Go version for ${props.mod}`);
-const title = computed(() => `Go module ${props.mod}`);
+const href = computed(() => `https://pkg.go.dev/${pkg.value}`);
+const alt = computed(() => `Go version for ${pkg.value}`);
+const title = computed(() => `Go module ${pkg.value}`);
 </script>
 
 <template>

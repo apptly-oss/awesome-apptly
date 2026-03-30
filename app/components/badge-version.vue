@@ -34,6 +34,7 @@ watch(() => props.src, () => {
     :title="title"
     target="_blank"
     rel="noopener"
+    class="inline-flex items-center leading-none"
   >
     <span
       v-if="!loaded && !error"
@@ -50,7 +51,7 @@ watch(() => props.src, () => {
       ref="badge"
       :src="src"
       :alt="alt"
-      class="h-5"
+      class="badge-version-img"
       @load="loaded = true"
       @error="error = true"
     >
@@ -58,6 +59,11 @@ watch(() => props.src, () => {
 </template>
 
 <style scoped>
+.badge-version-img {
+  height: 20px;
+  margin: 0;
+}
+
 .badge-version-skeleton {
   display: inline-block;
   width: 72px;

@@ -91,6 +91,11 @@ render a grey "unknown" badge instead of erroring.
 - `BadgeVersion` — generic badge `<img>` wrapper with loading
   skeleton, error fallback (shows alt text), and SSR hydration
   handling (`onMounted` checks `complete` + `naturalWidth`).
+- `BadgeVersionGo` — MDC wrapper (`:badge-version-go{mod="..."}`).
+  Optional `dir` prop for subpackages sharing a parent `go.mod` —
+  badge fetches the parent module version, link points to the
+  subpackage on pkg.go.dev.
+- `BadgeVersionNpm` — MDC wrapper (`:badge-version-npm{pkg="..."}`).
 - Icons use `@nuxt/icon` with `<Icon name="simple-icons:github" />`
   instead of hand-rolled SVG components.
 
