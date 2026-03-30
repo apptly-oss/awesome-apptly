@@ -101,11 +101,10 @@ render a grey "unknown" badge instead of erroring.
 
 ## Content DB in development
 
-After adding or removing content files, run `pnpm generate`
-before `pnpm dev`. The cloudflare preset serves the client-side
-SQL dump from Nitro build storage, which only `generate` (or
-`build`) populates. Without this step, SSR works but client-side
-navigation will 404.
+`pnpm dev` runs `nuxt cleanup` before starting the dev server,
+removing stale client-side SQL dumps that would otherwise cause
+SPA 404s. The dev server regenerates the content database on
+startup, so no separate `pnpm generate` step is needed.
 
 ## Dev server management
 

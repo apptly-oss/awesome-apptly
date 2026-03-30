@@ -62,15 +62,12 @@ file updates the Zod enum automatically (derived via `readdirSync`).
 
 ```sh
 pnpm install
-pnpm generate         # seed the client-side content DB (see below)
-pnpm dev              # local dev server
+pnpm dev              # runs nuxt cleanup + dev server
 ```
 
-**Content DB caveat:** the cloudflare preset's content handler
-serves the SQL dump from Nitro build storage. `pnpm generate`
-(or `pnpm build`) populates that storage. Without it, client-side
-navigation will 404 because the browser's WASM SQLite has no data.
-Re-run `pnpm generate` whenever content files are added or removed.
+`pnpm dev` runs `nuxt cleanup` before starting the dev server,
+removing stale client-side SQL dumps that would cause SPA 404s.
+The dev server regenerates the content database on startup.
 
 ## Build and deploy
 
