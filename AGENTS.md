@@ -70,21 +70,33 @@ go: github.com/kagal-dev/example
 Self-hosted SVG version badges rendered by `badge-maker` with
 pre-computed logo data URIs (extracted from `simple-icons` at
 development time, inlined as base64 constants to avoid bundling the
-full icon library into the Nitro server). The shared rendering logic
-lives in `server/utils/badge.ts` (Nitro auto-imports it).
+full icon library into the Nitro server). The `BadgeHandler` class
+in `server/utils/badge.ts` handles method dispatch, input
+validation, cache headers, SVG rendering, and edge cache purge —
+each endpoint provides only its identity and fetch callback.
 
 ### Endpoints
 
-- `/api/badge/go/{module}` — fetches version from
+- `GET /api/badge/go/{module}` — fetches version from
   `proxy.golang.org/{module}/@latest`. Validates the path
   matches a Go module pattern (domain with dot in first segment).
-- `/api/badge/npm/{package}` — fetches version from
+- `GET /api/badge/npm/{package}` — fetches version from
   `registry.npmjs.org/{package}/latest`. Validates the name
   matches npm naming rules (`@scope/name` or `name`).
+- `DELETE` on either endpoint purges the CF edge cache
+  (current PoP), so a freshly published version is picked
+  up on the next GET.
+- Other methods return `405` with an `Allow` header.
 
-Both endpoints return `image/svg+xml` with cache headers (1 hour
-for successful responses, 60 seconds for errors). Unknown packages
-render a grey "unknown" badge instead of erroring.
+Successful responses carry split `Cache-Control` (`max-age=3600`
+for browsers, `s-maxage=300` for the CF edge), a weak `ETag`
+from the version string (conditional requests return `304`),
+and `Last-Modified` when the upstream provides a timestamp.
+Unknown packages render a grey "unknown" badge with a 60-second
+TTL.
+
+Logging uses `consola` with tagged instances (`badge:go`,
+`badge:npm`).
 
 ### Components
 
