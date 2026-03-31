@@ -11,6 +11,7 @@ open-source projects, live at <https://awesome-apptly.com>.
 | Framework | [Nuxt 4](https://nuxt.com) + [Nuxt Content 3](https://content.nuxt.com) |
 | Hosting | [Cloudflare Workers](https://developers.cloudflare.com/workers/) (`cloudflare-module` preset) |
 | Database | [Cloudflare D1](https://developers.cloudflare.com/d1/) (content database) |
+| Cache | [Cloudflare KV](https://developers.cloudflare.com/kv/) (version cache) |
 | Styling | [Tailwind CSS 4](https://tailwindcss.com) + `@tailwindcss/typography` |
 | Icons | [`@nuxt/icon`](https://nuxt.com/modules/icon) + `@iconify-json/simple-icons` |
 | Badges | [`badge-maker`](https://github.com/badges/shields/tree/master/badge-maker) (self-hosted SVG badges, logos inlined as base64) |

@@ -25,6 +25,17 @@ export default defineNuxtConfig({
       routes: ['/'],
       crawlLinks: true,
     },
+    storage: {
+      versions: {
+        driver: 'cloudflare-kv-binding',
+        binding: 'VERSIONS_KV',
+      },
+    },
+    devStorage: {
+      versions: {
+        driver: 'memory',
+      },
+    },
   },
   vite: {
     plugins: [tailwindcss()],

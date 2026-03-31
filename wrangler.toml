@@ -13,6 +13,12 @@ ip = "0.0.0.0"
 directory = ".output/public"
 binding = "ASSETS"
 
+# pnpm wrangler kv namespace create awesome-apptly-versions
+[[kv_namespaces]]
+binding = "VERSIONS_KV"
+id = "37a05e89d7a24bc69a3c5e8b5a549ee3"
+preview_id = "75c57f6d78ab483eb6b98b961214d1fa"
+
 # wrangler d1 create awesome-apptly-content
 [[d1_databases]]
 binding = "DB"

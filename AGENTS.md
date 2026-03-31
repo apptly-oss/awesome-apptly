@@ -72,7 +72,7 @@ pre-computed logo data URIs (extracted from `simple-icons` at
 development time, inlined as base64 constants to avoid bundling the
 full icon library into the Nitro server). The `BadgeHandler` class
 in `server/utils/badge.ts` handles method dispatch, input
-validation, cache headers, SVG rendering, and edge cache purge —
+validation, cache headers, SVG rendering, and cache management —
 each endpoint provides only its identity and fetch callback.
 
 ### Endpoints
@@ -83,20 +83,37 @@ each endpoint provides only its identity and fetch callback.
 - `GET /api/badge/npm/{package}` — fetches version from
   `registry.npmjs.org/{package}/latest`. Validates the name
   matches npm naming rules (`@scope/name` or `name`).
-- `DELETE` on either endpoint purges the CF edge cache
-  (current PoP), so a freshly published version is picked
-  up on the next GET.
+- `DELETE` on either endpoint busts the version cache
+  and purges the CF edge cache (current PoP), so a freshly
+  published version is picked up on the next GET.
 - Other methods return `405` with an `Allow` header.
 
 Successful responses carry split `Cache-Control` (`max-age=3600`
 for browsers, `s-maxage=300` for the CF edge), a weak `ETag`
 from the version string (conditional requests return `304`),
-and `Last-Modified` when the upstream provides a timestamp.
-Unknown packages render a grey "unknown" badge with a 60-second
-TTL.
+and `Last-Modified` from the upstream timestamp. Unknown packages render a
+grey "unknown" badge with a 60-second TTL.
+
+### Caching
+
+Version lookups are cached in Cloudflare KV via Nitro's
+`useStorage('versions')` (`server/utils/version-cache.ts`).
+Each entry has a per-key TTL: 1 hour for successful lookups,
+60 seconds for errors — failed entries auto-expire, preventing
+unbounded growth from bogus package names. The KV namespace
+binding (`VERSIONS_KV`) is configured in `wrangler.toml` and
+mounted in `nuxt.config.ts`; local dev uses a memory driver.
+
+Concurrent requests for the same key at the TTL boundary are
+coalesced via an in-flight promise map — only one upstream
+fetch runs, and only the originating caller writes to KV.
+
+KV operations degrade gracefully: read failures fall through
+to an upstream fetch, write failures are logged but the badge
+is still returned.
 
 Logging uses `consola` with tagged instances (`badge:go`,
-`badge:npm`).
+`badge:npm`, `version-cache`).
 
 ### Components
 

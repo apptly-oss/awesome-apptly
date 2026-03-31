@@ -77,14 +77,22 @@ export class BadgeHandler {
       return this.renderBadge(event, { version: undefined });
     }
 
+    const cacheKey = `${this.idSuffix}:${pkg}`;
+
     if (event.method === 'DELETE') {
+      await deleteCachedVersion(cacheKey);
       await this.purgeBadgeCache(event);
       setResponseStatus(event, 204);
       return '';
     }
 
-    const result = await this.fetchUpstream(pkg, this.logger);
-    return this.renderBadge(event, result);
+    const { version, lastModified } = await fetchVersion(cacheKey, async () => {
+      const result = await this.fetchUpstream(pkg, this.logger);
+      if (!result.version) return undefined;
+      return { version: result.version, lastModified: result.lastModified };
+    });
+
+    return this.renderBadge(event, { version, lastModified });
   }
 
   private validatePackage(event: H3Event): string | undefined {
