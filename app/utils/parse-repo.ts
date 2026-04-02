@@ -1,22 +1,87 @@
+type RepoProvider = 'github';
+
+const providers: Record<RepoProvider, { prefix: string; baseURL: string }> = {
+  github: { prefix: 'github:', baseURL: 'https://github.com/' },
+};
+
 export interface RepoInfo {
-  provider: 'github'
+  provider: RepoProvider
   url: string
   label: string
 }
 
+interface ParsedPath {
+  provider: RepoProvider
+  repo: string
+  directory?: string
+}
+
+/**
+ * Match a provider prefix or base URL, normalise path segments, return provider and parts.
+ *
+ * Assumes the input after the prefix is a plain `owner/repo/...` path.
+ * Full URLs containing a ref (e.g. `/tree/main/`) are not stripped —
+ * use the short `provider:` prefix form for those cases.
+ */
+function splitPath(raw: string): undefined | { provider: RepoProvider; parts: string[] } {
+  for (const provider of Object.keys(providers) as RepoProvider[]) {
+    const { prefix, baseURL } = providers[provider];
+    for (const pfx of [prefix, baseURL]) {
+      if (!raw.startsWith(pfx)) continue;
+      const parts: string[] = [];
+      for (const s of raw.slice(pfx.length).split('/')) {
+        if (s === '..') parts.pop();
+        else if (s && s !== '.') parts.push(s);
+      }
+      if (parts.length >= 2) return { provider, parts };
+    }
+  }
+  return undefined;
+}
+
+/** Extract repo base and optional directory from normalised parts. */
+function parsePath(raw: string): ParsedPath | undefined {
+  const split = splitPath(raw);
+  if (!split) return undefined;
+  const { provider, parts } = split;
+  return {
+    provider,
+    repo: `${parts[0]}/${parts[1]}`,
+    directory: parts.length > 2 ? parts.slice(2).join('/') : undefined,
+  };
+}
+
+/** Shorten deep paths: `a/b/c/d` → `a/b/…/d`. */
+function makeRepoLabel(repo: string, directory?: string): string {
+  const full = directory ? `${repo}/${directory}` : repo;
+  const parts = full.split('/');
+  return parts.length > 3 ?
+    `${parts[0]}/${parts[1]}/\u2026/${parts.at(-1)!}` :
+    full;
+}
+
+/**
+ * Build the full URL for a repository, optionally including a subdirectory.
+ *
+ * Directory URLs use GitHub's `/tree/HEAD/` convention. Other providers
+ * would need their own URL template.
+ */
+function makeRepoURL(provider: RepoProvider, repo: string, directory?: string): string {
+  const { baseURL } = providers[provider];
+  return directory ?
+    `${baseURL}${repo}/tree/HEAD/${directory}` :
+    `${baseURL}${repo}`;
+}
+
 export function parseRepo(raw: string): RepoInfo | undefined {
-  if (!raw.startsWith('github:')) return undefined;
-  const path = raw.slice('github:'.length);
-  const parts = path.split('/');
-  if (parts.length < 2) return undefined;
+  const parsed = parsePath(raw);
+  if (!parsed) return undefined;
 
-  const owner = parts[0];
-  const repo = parts[1];
-  const directory = parts.length > 2 ? parts.slice(2).join('/') : undefined;
+  const { provider, repo, directory } = parsed;
 
-  const url = directory ?
-    `https://github.com/${owner}/${repo}/tree/HEAD/${directory}` :
-    `https://github.com/${owner}/${repo}`;
-
-  return { provider: 'github', url, label: path };
+  return {
+    provider,
+    url: makeRepoURL(provider, repo, directory),
+    label: makeRepoLabel(repo, directory),
+  };
 }
