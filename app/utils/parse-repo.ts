@@ -18,5 +18,10 @@ export function parseRepo(raw: string): RepoInfo | undefined {
     `https://github.com/${owner}/${repo}/tree/HEAD/${directory}` :
     `https://github.com/${owner}/${repo}`;
 
-  return { provider: 'github', url, label: path };
+  const leaf = parts.at(-1) || parts.at(-2);
+  const label = parts.length > 3 && leaf ?
+    `${owner}/${repo}/\u2026/${leaf}` :
+    path;
+
+  return { provider: 'github', url, label };
 }
