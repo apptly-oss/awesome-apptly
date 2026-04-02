@@ -12,7 +12,7 @@
     "check": "run-s generate lint:check typecheck",
     "clean": "rimraf .output .nuxt .wrangler node_modules",
     "deploy": "wrangler deploy",
-    "dev": "nuxt dev --dotenv .env.local",
+    "dev": "nuxt cleanup && nuxt dev --dotenv .env.local",
     "generate": "nuxt generate",
     "lint": "eslint . --fix",
     "lint:check": "eslint .",
@@ -24,6 +24,7 @@
     "@nuxt/content": "^3.12.0",
     "@nuxt/icon": "^2.2.1",
     "badge-maker": "^5.0.2",
+    "consola": "^3.4.2",
     "nuxt": "^4.4.2",
     "nuxt-studio": "~1.4"
   },

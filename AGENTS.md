@@ -70,37 +70,70 @@ go: github.com/kagal-dev/example
 Self-hosted SVG version badges rendered by `badge-maker` with
 pre-computed logo data URIs (extracted from `simple-icons` at
 development time, inlined as base64 constants to avoid bundling the
-full icon library into the Nitro server). The shared rendering logic
-lives in `server/utils/badge.ts` (Nitro auto-imports it).
+full icon library into the Nitro server). The `BadgeHandler` class
+in `server/utils/badge.ts` handles method dispatch, input
+validation, cache headers, SVG rendering, and cache management —
+each endpoint provides only its identity and fetch callback.
 
 ### Endpoints
 
-- `/api/badge/go/{module}` — fetches version from
+- `GET /api/badge/go/{module}` — fetches version from
   `proxy.golang.org/{module}/@latest`. Validates the path
   matches a Go module pattern (domain with dot in first segment).
-- `/api/badge/npm/{package}` — fetches version from
+- `GET /api/badge/npm/{package}` — fetches version from
   `registry.npmjs.org/{package}/latest`. Validates the name
   matches npm naming rules (`@scope/name` or `name`).
+- `DELETE` on either endpoint busts the version cache
+  and purges the CF edge cache (current PoP), so a freshly
+  published version is picked up on the next GET.
+- Other methods return `405` with an `Allow` header.
 
-Both endpoints return `image/svg+xml` with cache headers (1 hour
-for successful responses, 60 seconds for errors). Unknown packages
-render a grey "unknown" badge instead of erroring.
+Successful responses carry split `Cache-Control` (`max-age=3600`
+for browsers, `s-maxage=300` for the CF edge), a weak `ETag`
+from the version string (conditional requests return `304`),
+and `Last-Modified` from the upstream timestamp. Unknown packages render a
+grey "unknown" badge with a 60-second TTL.
+
+### Caching
+
+Version lookups are cached in Cloudflare KV via Nitro's
+`useStorage('versions')` (`server/utils/version-cache.ts`).
+Each entry has a per-key TTL: 1 hour for successful lookups,
+60 seconds for errors — failed entries auto-expire, preventing
+unbounded growth from bogus package names. The KV namespace
+binding (`VERSIONS_KV`) is configured in `wrangler.toml` and
+mounted in `nuxt.config.ts`; local dev uses a memory driver.
+
+Concurrent requests for the same key at the TTL boundary are
+coalesced via an in-flight promise map — only one upstream
+fetch runs, and only the originating caller writes to KV.
+
+KV operations degrade gracefully: read failures fall through
+to an upstream fetch, write failures are logged but the badge
+is still returned.
+
+Logging uses `consola` with tagged instances (`badge:go`,
+`badge:npm`, `version-cache`).
 
 ### Components
 
 - `BadgeVersion` — generic badge `<img>` wrapper with loading
   skeleton, error fallback (shows alt text), and SSR hydration
   handling (`onMounted` checks `complete` + `naturalWidth`).
+- `BadgeVersionGo` — MDC wrapper (`:badge-version-go{mod="..."}`).
+  Optional `dir` prop for subpackages sharing a parent `go.mod` —
+  badge fetches the parent module version, link points to the
+  subpackage on pkg.go.dev.
+- `BadgeVersionNpm` — MDC wrapper (`:badge-version-npm{pkg="..."}`).
 - Icons use `@nuxt/icon` with `<Icon name="simple-icons:github" />`
   instead of hand-rolled SVG components.
 
 ## Content DB in development
 
-After adding or removing content files, run `pnpm generate`
-before `pnpm dev`. The cloudflare preset serves the client-side
-SQL dump from Nitro build storage, which only `generate` (or
-`build`) populates. Without this step, SSR works but client-side
-navigation will 404.
+`pnpm dev` runs `nuxt cleanup` before starting the dev server,
+removing stale client-side SQL dumps that would otherwise cause
+SPA 404s. The dev server regenerates the content database on
+startup, so no separate `pnpm generate` step is needed.
 
 ## Dev server management
 

@@ -11,6 +11,7 @@ open-source projects, live at <https://awesome-apptly.com>.
 | Framework | [Nuxt 4](https://nuxt.com) + [Nuxt Content 3](https://content.nuxt.com) |
 | Hosting | [Cloudflare Workers](https://developers.cloudflare.com/workers/) (`cloudflare-module` preset) |
 | Database | [Cloudflare D1](https://developers.cloudflare.com/d1/) (content database) |
+| Cache | [Cloudflare KV](https://developers.cloudflare.com/kv/) (version cache) |
 | Styling | [Tailwind CSS 4](https://tailwindcss.com) + `@tailwindcss/typography` |
 | Icons | [`@nuxt/icon`](https://nuxt.com/modules/icon) + `@iconify-json/simple-icons` |
 | Badges | [`badge-maker`](https://github.com/badges/shields/tree/master/badge-maker) (self-hosted SVG badges, logos inlined as base64) |
@@ -62,15 +63,12 @@ file updates the Zod enum automatically (derived via `readdirSync`).
 
 ```sh
 pnpm install
-pnpm generate         # seed the client-side content DB (see below)
-pnpm dev              # local dev server
+pnpm dev              # runs nuxt cleanup + dev server
 ```
 
-**Content DB caveat:** the cloudflare preset's content handler
-serves the SQL dump from Nitro build storage. `pnpm generate`
-(or `pnpm build`) populates that storage. Without it, client-side
-navigation will 404 because the browser's WASM SQLite has no data.
-Re-run `pnpm generate` whenever content files are added or removed.
+`pnpm dev` runs `nuxt cleanup` before starting the dev server,
+removing stale client-side SQL dumps that would cause SPA 404s.
+The dev server regenerates the content database on startup.
 
 ## Build and deploy
 
