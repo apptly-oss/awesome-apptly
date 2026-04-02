@@ -127,6 +127,20 @@ Logging uses `consola` with tagged instances (`badge:go`,
 - `BadgeVersionNpm` — MDC wrapper (`:badge-version-npm{pkg="..."}`).
 - Icons use `@nuxt/icon` with `<Icon name="simple-icons:github" />`
   instead of hand-rolled SVG components.
+- `GoPkg` — inline link to pkg.go.dev with trailing Go icon
+  (`:go-pkg{mod="darvaza.org/resolver"}`). Props:
+  - `mod` (required) — Go module path.
+  - `dir` — subdirectory within the module.
+  - `sym` — type/constant name, links to `#Symbol`.
+  - `func` — function name, links to `#Func`, adds `()` suffix.
+    Takes precedence over `sym`.
+  - `short` — show only the symbol/function name, omit the
+    package prefix. Preserves `()` for functions.
+  - `label` — override the display text entirely.
+  Bare `mod` displays the full module path. With `sym` or `func`,
+  the default label is `pkg.Symbol` (last path segment + name).
+  Keep `:go-pkg` mid-line in prose — at line-start MDC treats
+  it as a block element and breaks the paragraph.
 - `ProseHeading` — shared base for prose heading overrides with
   hover-visible anchor glyph (default `§`). `prose-h2` and
   `prose-h3` delegate to it. The glyph is customisable per
