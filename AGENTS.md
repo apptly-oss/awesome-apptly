@@ -127,6 +127,10 @@ Logging uses `consola` with tagged instances (`badge:go`,
 - `BadgeVersionNpm` — MDC wrapper (`:badge-version-npm{pkg="..."}`).
 - Icons use `@nuxt/icon` with `<Icon name="simple-icons:github" />`
   instead of hand-rolled SVG components.
+- `ProseHeading` — shared base for prose heading overrides with
+  hover-visible anchor glyph (default `§`). `prose-h2` and
+  `prose-h3` delegate to it. The glyph is customisable per
+  heading via MDC attributes (`## Heading {glyph="#"}`).
 
 ## Content DB in development
 
