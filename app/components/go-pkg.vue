@@ -1,3 +1,7 @@
+<script lang="ts">
+import type { GoPkgProps } from '~/utils/go-pkg';
+</script>
+
 <script setup lang="ts">
 /** Inline link to pkg.go.dev with a trailing Go icon. */
 const props = defineProps<GoPkgProps>();

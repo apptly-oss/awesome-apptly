@@ -117,6 +117,15 @@ Logging uses `consola` with tagged instances (`badge:go`,
 
 ### Components
 
+Types used in `defineProps<T>()` must be defined or imported
+in the component's `<script>` block — auto-imports are not
+resolved during production builds.
+
+- If a utility function also uses the type, keep it in the
+  utility module and import it in the component.
+- If only components use it, define it in the owning
+  component's `<script>` block.
+
 - `BadgeVersion` — generic badge `<img>` wrapper with loading
   skeleton, error fallback (shows alt text), and SSR hydration
   handling (`onMounted` checks `complete` + `naturalWidth`).
