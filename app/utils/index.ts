@@ -1,6 +1,14 @@
 // Virtual slug for the "Other" group (projects not under any umbrella).
 export const OTHER_SLUG = '_';
 
+/** Shared props for prose heading overrides. */
+export interface ProseHeadingProps {
+  /** Heading anchor ID, used for the `id` attribute and `#` permalink. */
+  id?: string
+  /** Anchor glyph shown on hover. */
+  glyph?: string
+}
+
 /**
  * Type-safe Array.includes that accepts a wider search value.
  *
