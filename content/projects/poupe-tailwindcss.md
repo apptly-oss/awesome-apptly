@@ -10,8 +10,9 @@ category:
   - typescript
 ---
 
-Bridges `@poupe/theme-builder` tokens into Tailwind CSS v4's
-`@theme` layer. Colour roles, typography scales, elevation levels,
+Bridges :npm-pkg{pkg="@poupe/theme-builder"} tokens into
+:npm-pkg{pkg="tailwindcss" label="Tailwind CSS"} v4's `@theme`
+layer. Colour roles, typography scales, elevation levels,
 and shape tokens are registered as CSS custom properties so they
 participate in Tailwind's utility generation — `bg-primary`,
 `text-on-surface`, `rounded-lg` all resolve to the active theme.

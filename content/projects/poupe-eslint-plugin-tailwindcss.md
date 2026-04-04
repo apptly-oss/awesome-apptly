@@ -10,9 +10,10 @@ category:
   - typescript
 ---
 
-Twenty ESLint rules purpose-built for Tailwind CSS v4's native CSS
-syntax — `@theme` functions, `@apply` directives, modifier chains,
-and utility class patterns. Catches conflicting utilities, arbitrary
+Twenty :npm-pkg{pkg="eslint" label="ESLint"} rules purpose-built
+for :npm-pkg{pkg="tailwindcss" label="Tailwind CSS"} v4's native
+CSS syntax — `@theme` functions, `@apply` directives, modifier
+chains, and utility class patterns. Catches conflicting utilities, arbitrary
 value overuse, and spacing inconsistencies at lint time.
 
 Ships minimal, recommended, and strict presets. Also exports a CSS
