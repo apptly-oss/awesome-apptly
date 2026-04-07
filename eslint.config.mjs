@@ -1,9 +1,12 @@
 // @ts-check
 import { withPoupe } from '@poupe/eslint-config';
+import tailwindcss from '@poupe/eslint-plugin-tailwindcss';
 import withNuxt from './.nuxt/eslint.config.mjs';
 
 export default withPoupe(withNuxt(), {
   ignores: [
     '.claude/**/memory',
   ],
-});
+},
+tailwindcss.configs.recommended,
+);

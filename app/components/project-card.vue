@@ -1,12 +1,12 @@
 <script setup lang="ts">
 defineProps<{
-  path: string
-  title: string
-  description?: string
   category: string[]
+  description?: string
   languageSlugs: string[]
-  repo?: string
   licence?: string
+  path: string
+  repo?: string
+  title: string
 }>();
 </script>
 

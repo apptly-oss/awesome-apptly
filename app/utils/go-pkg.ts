@@ -2,30 +2,30 @@ const BASE_URL = 'https://pkg.go.dev/';
 
 /** Props accepted by the `:go-pkg` MDC component. */
 export interface GoPkgProps {
-  /** Go module path (e.g. `darvaza.org/resolver`). */
-  mod: string
   /** Subdirectory within the module (e.g. `pkg/client`). */
   dir?: string
-  /** Type or constant name — links to `#Symbol`. */
-  sym?: string
   /** Function name — links to `#Func`, label gets `()` suffix. Takes precedence over `sym`. */
   func?: string
-  /** Show only the symbol/function name, omit the package prefix. Preserves `()` suffix for functions. */
-  short?: boolean
   /** Override the display text. */
   label?: string
+  /** Go module path (e.g. `darvaza.org/resolver`). */
+  mod: string
+  /** Show only the symbol/function name, omit the package prefix. Preserves `()` suffix for functions. */
+  short?: boolean
+  /** Type or constant name — links to `#Symbol`. */
+  sym?: string
 }
 
 /** Resolved link data for a Go package reference. */
 export interface GoPkgLink {
-  /** Full URL to pkg.go.dev, optionally with a `#Symbol` fragment. */
-  url: string
+  /** Accessible label including new-tab indicator. */
+  ariaLabel: string
   /** Display text for the link. */
   label: string
   /** Tooltip text (e.g. `darvaza.org/resolver on pkg.go.dev`). */
   title: string
-  /** Accessible label including new-tab indicator. */
-  ariaLabel: string
+  /** Full URL to pkg.go.dev, optionally with a `#Symbol` fragment. */
+  url: string
 }
 
 /** Build the pkg.go.dev URL for a module, optional subpackage, and optional symbol. */

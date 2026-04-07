@@ -3,18 +3,18 @@ import { consola } from 'consola';
 const logger = consola.withTag('version-cache');
 
 export interface FetchResult {
-  version: string
   lastModified?: Date
+  version: string
 }
 
 interface StoredVersion {
-  version?: string // omitted for failed lookups — avoids null in JSON
   lastModified: string // ISO 8601 — Date doesn't survive JSON round-trip
+  version?: string // omitted for failed lookups — avoids null in JSON
 }
 
 interface InflightResult {
-  result: FetchResult | undefined
   lastModified: Date
+  result: FetchResult | undefined
   ttl: number
 }
 
@@ -47,7 +47,7 @@ export async function deleteCachedVersion(key: string): Promise<void> {
 export async function fetchVersion(
   key: string,
   fetcher: () => Promise<FetchResult | undefined>,
-): Promise<{ version: string | undefined; lastModified: Date }> {
+): Promise<{ lastModified: Date; version: string | undefined }> {
   const storage = useStorage('versions');
 
   // KV cache hit — return stored data directly

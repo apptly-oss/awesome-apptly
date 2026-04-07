@@ -18,17 +18,17 @@ const COLOR_ERROR = 'lightgray';
 const VERSION_UNKNOWN = 'unknown';
 
 export interface BadgeResult {
-  version: string | undefined
   lastModified?: Date
+  version: string | undefined
 }
 
 interface BadgeHandlerOptions {
-  logo: string
-  idSuffix: string
   color: string
-  pattern: RegExp
-  logger?: ConsolaInstance
   fetch: (pkg: string, logger: ConsolaInstance) => Promise<BadgeResult>
+  idSuffix: string
+  logger?: ConsolaInstance
+  logo: string
+  pattern: RegExp
 }
 
 /** Parse a date string, returning undefined for missing or invalid values. */
@@ -39,12 +39,12 @@ export function parseDate(value: string | undefined): Date | undefined {
 }
 
 export class BadgeHandler {
-  private readonly logo: string;
-  private readonly idSuffix: string;
   private readonly color: string;
-  private readonly pattern: RegExp;
-  private readonly logger: ConsolaInstance;
   private readonly fetchUpstream: (pkg: string, logger: ConsolaInstance) => Promise<BadgeResult>;
+  private readonly idSuffix: string;
+  private readonly logger: ConsolaInstance;
+  private readonly logo: string;
+  private readonly pattern: RegExp;
 
   readonly eventHandler: EventHandler;
 

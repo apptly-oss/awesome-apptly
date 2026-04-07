@@ -1,10 +1,10 @@
 <script lang="ts">
 /** Shared props for prose heading overrides. */
 export interface ProseHeadingProps {
-  /** Heading anchor ID, used for the `id` attribute and `#` permalink. */
-  id?: string
   /** Anchor glyph shown on hover. */
   glyph?: string
+  /** Heading anchor ID, used for the `id` attribute and `#` permalink. */
+  id?: string
 }
 </script>
 

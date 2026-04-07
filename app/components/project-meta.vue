@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const props = defineProps<{
-  repo?: string
+  go?: string
   licence?: string
   npm?: string
-  go?: string
+  repo?: string
 }>();
 
 const repoInfo = computed(() =>
