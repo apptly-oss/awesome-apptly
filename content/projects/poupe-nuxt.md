@@ -10,10 +10,13 @@ category:
   - typescript
 ---
 
-Drop-in Nuxt integration for the full Poupe UI stack. Add the
-module, provide a seed colour, and everything else is wired
-automatically — Tailwind plugin, theme CSS injection, Vue component
-registration, and `@nuxtjs/color-mode` integration.
+Drop-in :npm-pkg{pkg="nuxt" label="Nuxt"} integration for the
+full Poupe UI stack. Add the module, provide a seed colour, and
+everything else is wired automatically —
+:npm-pkg{pkg="tailwindcss" label="Tailwind CSS"} plugin, theme
+CSS injection, :npm-pkg{pkg="vue" label="Vue"} component
+registration,
+and :npm-pkg{pkg="@nuxtjs/color-mode"} integration.
 
 Handles SSR-safe colour-scheme hydration, tree-shakes unused
 components via the auto-import resolver, and exposes module options

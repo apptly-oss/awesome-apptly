@@ -1,19 +1,19 @@
 <script lang="ts">
-import type { GoPkgProps } from '~/utils/go-pkg';
+import type { NpmPkgProps } from '~/utils/npm-pkg';
 </script>
 
 <script setup lang="ts">
 /**
- * Inline link to a Go package — resolves to internal project
- * page or pkg.go.dev. External links get a trailing Go icon
+ * Inline link to an npm package — resolves to internal project
+ * page or npmjs.com. External links get a trailing npm icon
  * via CSS (`modules/external-link-icons.ts`), scoped to `.prose`.
  */
-const props = defineProps<GoPkgProps>();
+const props = defineProps<NpmPkgProps>();
 
-const { ready, resolve: resolveInternal } = useGoPackages();
+const { ready, resolve: resolveInternal } = useNpmPackages();
 
 const link = computed(() =>
-  resolveGoPkg(props, resolveInternal(props.mod)),
+  resolveNpmPkg(props, resolveInternal(props.pkg)),
 );
 </script>
 

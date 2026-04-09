@@ -10,9 +10,9 @@ category:
   - typescript
 ---
 
-Built on `reka-ui` headless primitives for accessibility, styled with
-`tailwind-variants` for token-driven theming. Each component resolves
-its colours and spacing from `@poupe/tailwindcss` tokens, so
+Built on :npm-pkg{pkg="reka-ui"} headless primitives for accessibility, styled with
+:npm-pkg{pkg="tailwind-variants"} for token-driven theming. Each component resolves
+its colours and spacing from :npm-pkg{pkg="@poupe/tailwindcss"} tokens, so
 switching the seed colour re-themes the entire UI automatically.
 
 Ships a component resolver for bundler auto-imports, composables

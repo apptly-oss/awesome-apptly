@@ -10,7 +10,7 @@ category:
   - typescript
 ---
 
-Fork of Google's `material-foundation/material-color-utilities`.
+Fork of Google's :npm-pkg{pkg="@material/material-color-utilities" label="material-color-utilities"}.
 The upstream library implements the HCT colour space, tonal palette
 generation, dynamic colour schemes, and image-to-seed extraction
 that power Material Design 3 — but Google rarely publishes the

@@ -1,19 +1,19 @@
 type RepoProvider = 'github';
 
-const providers: Record<RepoProvider, { prefix: string; baseURL: string }> = {
+const providers: Record<RepoProvider, { baseURL: string; prefix: string }> = {
   github: { prefix: 'github:', baseURL: 'https://github.com/' },
 };
 
 export interface RepoInfo {
+  label: string
   provider: RepoProvider
   url: string
-  label: string
 }
 
 interface ParsedPath {
+  directory?: string
   provider: RepoProvider
   repo: string
-  directory?: string
 }
 
 /**
@@ -23,7 +23,7 @@ interface ParsedPath {
  * Full URLs containing a ref (e.g. `/tree/main/`) are not stripped —
  * use the short `provider:` prefix form for those cases.
  */
-function splitPath(raw: string): undefined | { provider: RepoProvider; parts: string[] } {
+function splitPath(raw: string): undefined | { parts: string[]; provider: RepoProvider } {
   for (const provider of Object.keys(providers) as RepoProvider[]) {
     const { prefix, baseURL } = providers[provider];
     for (const pfx of [prefix, baseURL]) {

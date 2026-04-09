@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{
-  mod: string
   dir?: string
+  mod: string
 }>();
 
 const pkg = computed(() => props.dir ? `${props.mod}/${props.dir}` : props.mod);

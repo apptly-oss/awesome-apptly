@@ -21,7 +21,7 @@ type Project = NonNullable<typeof projects.value>[number];
 const hasOther = computed(() =>
   projects.value?.some((p) => !isUnderUmbrella(p.category)) ?? false);
 
-interface NavPill { title: string; href: string; kind?: string }
+interface NavPill { href: string; kind?: string; title: string }
 
 const umbrellas = computed<NavPill[]>(() => {
   const items: NavPill[] = sorted.value
@@ -55,7 +55,7 @@ const categoryName = computed(() => {
 });
 
 // Grouped view: umbrellas + uncategorised.
-interface Group { name: string; href: string; description?: string; projects: Project[] }
+interface Group { description?: string; href: string; name: string; projects: Project[] }
 
 const groups = computed<Group[]>(() => {
   if (category.value || !projects.value || sorted.value.length === 0) return [];

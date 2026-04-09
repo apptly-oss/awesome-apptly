@@ -15,7 +15,7 @@ const badge = new BadgeHandler({
 
   async fetch(modulePath, logger) {
     const proxyUrl = `https://proxy.golang.org/${escapeModulePath(modulePath)}/@latest`;
-    const info = await $fetch<{ Version: string; Time: string }>(proxyUrl).catch((error) => {
+    const info = await $fetch<{ Time: string; Version: string }>(proxyUrl).catch((error) => {
       logger.warn(`failed to fetch ${modulePath}:`, error);
       return undefined;
     });

@@ -1,4 +1,4 @@
-<!-- cSpell:words apptly darvaza kagal poupe -->
+<!-- cSpell:ignore maxage subpackages typechecks -->
 # Agent instructions
 
 Read [README.md](README.md) for the project overview, stack,
@@ -46,8 +46,10 @@ Optional metadata fields for badges and links:
 
 - `repo` — source link as `github:{owner/repo[/dir]}`.
 - `licence` — SPDX identifier (e.g. `MIT`, `Apache-2.0`).
-- `npm` — npm package name for a self-hosted version badge.
-- `go` — Go module path for a self-hosted version badge.
+- `npm` — npm package name for a self-hosted version badge
+  and internal link resolution (see `NpmPkg` below).
+- `go` — Go module path for a self-hosted version badge
+  and internal link resolution (see `GoPkg` below).
 
 ```yaml
 ---
@@ -136,8 +138,15 @@ resolved during production builds.
 - `BadgeVersionNpm` — MDC wrapper (`:badge-version-npm{pkg="..."}`).
 - Icons use `@nuxt/icon` with `<Icon name="simple-icons:github" />`
   instead of hand-rolled SVG components.
-- `GoPkg` — inline link to pkg.go.dev with trailing Go icon
-  (`:go-pkg{mod="darvaza.org/resolver"}`). Props:
+- `GoPkg` — inline link to a Go package
+  (`:go-pkg{mod="darvaza.org/resolver"}`). Resolves to the
+  internal project page when a project with a matching `go`
+  field exists; otherwise links to pkg.go.dev. Internal
+  resolution applies only to bare module references — when
+  `dir`, `sym`, or `func` is set the link always points to
+  pkg.go.dev. The trailing Go icon on external links is added
+  by `modules/external-link-icons.ts` via CSS — see
+  *External-link icons* below. Props:
   - `mod` (required) — Go module path.
   - `dir` — subdirectory within the module.
   - `sym` — type/constant name, links to `#Symbol`.
@@ -148,12 +157,83 @@ resolved during production builds.
   - `label` — override the display text entirely.
   Bare `mod` displays the full module path. With `sym` or `func`,
   the default label is `pkg.Symbol` (last path segment + name).
-  Keep `:go-pkg` mid-line in prose — at line-start MDC treats
-  it as a block element and breaks the paragraph.
+  Internal links navigate in the same tab; external links
+  open in a new tab. Don't leave `:go-pkg` as the sole
+  content of its line — MDC promotes it to a block element.
+  Ensure other text appears on the same line.
+- `NpmPkg` — inline link to an npm package
+  (`:npm-pkg{pkg="@poupe/tailwindcss"}`). Resolves to the
+  internal project page when a project with a matching `npm`
+  field exists; otherwise links to npmjs.com. The trailing
+  npm icon on external links is added by
+  `modules/external-link-icons.ts` via CSS — see
+  *External-link icons* below. Props:
+  - `pkg` (required) — full npm package name.
+  - `short` — show only the bare name without scope
+    (e.g. `tailwindcss` instead of `@poupe/tailwindcss`).
+  - `label` — override the display text entirely.
+  Internal links navigate in the same tab; external links
+  open in a new tab. Don't leave `:npm-pkg` as the sole
+  content of its line — MDC promotes it to a block element.
+  Ensure other text appears on the same line.
 - `ProseHeading` — shared base for prose heading overrides with
   hover-visible anchor glyph (default `§`). `prose-h2` and
   `prose-h3` delegate to it. The glyph is customisable per
   heading via MDC attributes (`## Heading {glyph="#"}`).
+
+## External-link icons
+
+`modules/external-link-icons.ts` is a build-time Nuxt module
+that extracts brand glyphs from `@iconify-json/simple-icons`
+(currently `npm`, `go`, and `github`), bundles them with a
+hand-rolled lucide-style "open in new tab" SVG, and emits a
+CSS file exposing them as `--icon-npm`, `--icon-go`,
+`--icon-github`, and `--icon-external-link` custom properties
+on `:root`. The file is appended to `nuxt.options.css` so it
+ships in the regular client bundle.
+
+The same file decorates external links in markdown content:
+
+```css
+.prose a[href^="http" i]:not(:has(img))::after { … }
+```
+
+Cascade rules swap the `mask-image` to the matching brand
+glyph when the `href` is anchored at the start with
+`https://www.npmjs.com/`, `https://pkg.go.dev/`,
+`https://github.com/`, or `https://gist.github.com/`. Each
+rule uses an anchored `[href^="https://host/" i]`
+attribute selector; the trailing `i` flag is the CSS
+Selectors Level 4 case-insensitive marker, so a typo'd
+`Github.com` link still matches. Multi-host brands like
+GitHub wrap their hosts in `:is(…)`. Anchored prefixes rule
+out incidental substring hits in URL paths or query
+strings. `http://` is intentionally not covered — every
+supported brand serves over HTTPS only. The icon is
+rendered via `mask-image` over `background-color:
+currentColor`, so it inherits the link colour automatically.
+
+Three deliberate exclusions:
+
+- **Scope `.prose`** — the chrome (`ProjectMeta` badges, the
+  GitHub repo link) lives outside the prose container, so
+  the GitHub icon there is added by `<Icon>` rather than the
+  CSS rule.
+- **`:not(:has(img))`** — any `:badge-version-*` MDC component
+  used inside markdown wraps an `<img>` shield, so the rule
+  skips it and keeps the shields.io graphic clean.
+- **No double-icon** — `GoPkg` and `NpmPkg` do not render an
+  inline `<Icon>`; the CSS rule provides the trailing glyph
+  for external links. Internal links (references to known
+  projects) get no trailing icon — they render as `<NuxtLink>`
+  with relative hrefs that don't match the `[href^="http" i]`
+  selector.
+
+Adding a new brand: append a `{ name, host }` entry to
+`DEFAULT_BRANDS` in `modules/external-link-icons.ts`, or
+extend `externalLinkIcons.brands` in `nuxt.config.ts`. The
+matching cascade rule is generated automatically by
+`buildBrandRule` — no other edits needed.
 
 ## Content DB in development
 

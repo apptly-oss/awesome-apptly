@@ -1,17 +1,17 @@
 <script setup lang="ts">
 defineProps<{
-  name: string
-  href: string
   description?: string
-  projects: Array<{
-    path: string
-    title: string
-    description?: string
-    category: string[]
-    repo?: string
-    licence?: string
-  }>
+  href: string
   languageSlugs: string[]
+  name: string
+  projects: Array<{
+    category: string[]
+    description?: string
+    licence?: string
+    path: string
+    repo?: string
+    title: string
+  }>
 }>();
 </script>
 
