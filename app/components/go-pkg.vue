@@ -4,15 +4,34 @@ import type { GoPkgProps } from '~/utils/go-pkg';
 
 <script setup lang="ts">
 /**
- * Inline link to pkg.go.dev. The trailing Go icon is added via
- * CSS by `modules/external-link-icons.ts`, scoped to `.prose`.
+ * Inline link to a Go package — resolves to internal project
+ * page or pkg.go.dev. External links get a trailing Go icon
+ * via CSS (`modules/external-link-icons.ts`), scoped to `.prose`.
  */
 const props = defineProps<GoPkgProps>();
-const link = computed(() => resolveGoPkg(props));
+
+const { ready, resolve: resolveInternal } = useGoPackages();
+
+const link = computed(() =>
+  resolveGoPkg(props, resolveInternal(props.mod)),
+);
 </script>
 
 <template>
+  <NuxtLink
+    v-if="link.internal"
+    :to="link.url"
+    :title="link.title"
+    :aria-label="link.ariaLabel"
+    class="text-inherit hover:underline"
+  >{{ link.label }}</NuxtLink>
+  <span
+    v-else-if="!ready"
+    :title="link.title"
+    class="text-inherit"
+  >{{ link.label }}</span>
   <a
+    v-else
     :href="link.url"
     :title="link.title"
     :aria-label="link.ariaLabel"

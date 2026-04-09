@@ -18,13 +18,15 @@ export interface GoPkgProps {
 
 /** Resolved link data for a Go package reference. */
 export interface GoPkgLink {
-  /** Accessible label including new-tab indicator. */
+  /** Accessible label including new-tab indicator for external links. */
   ariaLabel: string
+  /** Whether the link points to an internal project page. */
+  internal: boolean
   /** Display text for the link. */
   label: string
-  /** Tooltip text (e.g. `darvaza.org/resolver on pkg.go.dev`). */
+  /** Tooltip text. */
   title: string
-  /** Full URL to pkg.go.dev, optionally with a `#Symbol` fragment. */
+  /** Link target — internal project path or pkg.go.dev URL. */
   url: string
 }
 
@@ -46,22 +48,34 @@ function makeGoPkgLabel(props: GoPkgProps, symbol?: string, suffix = ''): string
   return props.dir ?? props.mod;
 }
 
-/** Resolve all link data for a Go package reference. */
-export function resolveGoPkg(props: GoPkgProps): GoPkgLink {
+/**
+ * Resolve all link data for a Go package reference.
+ *
+ * When `internalPath` is provided and the reference is to the
+ * module as a whole (no `dir`, `sym`, or `func`), the link
+ * points to the internal project page instead of pkg.go.dev.
+ */
+export function resolveGoPkg(props: GoPkgProps, internalPath?: string): GoPkgLink {
   const symbol = props.func ?? props.sym;
   const suffix = props.func ? '()' : '';
   const pkg = props.dir ? `${props.mod}/${props.dir}` : props.mod;
 
-  const url = makeGoPkgURL(props.mod, props.dir, symbol);
+  // Internal only when pointing at the module as a whole —
+  // sub-packages and symbols are better served by pkg.go.dev.
+  const internal = !!internalPath && !props.dir && !symbol;
+  const url = internal ? internalPath : makeGoPkgURL(props.mod, props.dir, symbol);
   const label = makeGoPkgLabel(props, symbol, suffix);
-  const title = symbol ?
-    `${pkg}.${symbol} on pkg.go.dev` :
-    `${pkg} on pkg.go.dev`;
+  const title = internal ?
+    `${pkg} on this site` :
+    (symbol ?
+      `${pkg}.${symbol} on pkg.go.dev` :
+      `${pkg} on pkg.go.dev`);
 
   return {
-    url,
+    ariaLabel: internal ? title : `${title} (opens in new tab)`,
+    internal,
     label,
     title,
-    ariaLabel: `${title} (opens in new tab)`,
+    url,
   };
 }
