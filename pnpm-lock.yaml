@@ -30,6 +30,9 @@ importers:
       '@iconify-json/simple-icons':
         specifier: ^1.2.75
         version: 1.2.75
+      '@iconify/types':
+        specifier: ^2.0.0
+        version: 2.0.0
       '@nuxt/eslint':
         specifier: ^1.15.2
         version: 1.15.2(@typescript-eslint/utils@8.58.0(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3))(@vue/compiler-sfc@3.5.30)(eslint@9.39.4(jiti@2.6.1))(magicast@0.5.2)(typescript@5.9.3)(vite@7.3.1(@types/node@20.19.37)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))
