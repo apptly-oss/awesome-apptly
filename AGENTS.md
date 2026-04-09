@@ -46,7 +46,8 @@ Optional metadata fields for badges and links:
 
 - `repo` — source link as `github:{owner/repo[/dir]}`.
 - `licence` — SPDX identifier (e.g. `MIT`, `Apache-2.0`).
-- `npm` — npm package name for a self-hosted version badge.
+- `npm` — npm package name for a self-hosted version badge
+  and internal link resolution (see `NpmPkg` below).
 - `go` — Go module path for a self-hosted version badge
   and internal link resolution (see `GoPkg` below).
 
@@ -160,6 +161,21 @@ resolved during production builds.
   open in a new tab. Don't leave `:go-pkg` as the sole
   content of its line — MDC promotes it to a block element.
   Ensure other text appears on the same line.
+- `NpmPkg` — inline link to an npm package
+  (`:npm-pkg{pkg="@poupe/tailwindcss"}`). Resolves to the
+  internal project page when a project with a matching `npm`
+  field exists; otherwise links to npmjs.com. The trailing
+  npm icon on external links is added by
+  `modules/external-link-icons.ts` via CSS — see
+  *External-link icons* below. Props:
+  - `pkg` (required) — full npm package name.
+  - `short` — show only the bare name without scope
+    (e.g. `tailwindcss` instead of `@poupe/tailwindcss`).
+  - `label` — override the display text entirely.
+  Internal links navigate in the same tab; external links
+  open in a new tab. Don't leave `:npm-pkg` as the sole
+  content of its line — MDC promotes it to a block element.
+  Ensure other text appears on the same line.
 - `ProseHeading` — shared base for prose heading overrides with
   hover-visible anchor glyph (default `§`). `prose-h2` and
   `prose-h3` delegate to it. The glyph is customisable per
@@ -206,12 +222,12 @@ Three deliberate exclusions:
 - **`:not(:has(img))`** — any `:badge-version-*` MDC component
   used inside markdown wraps an `<img>` shield, so the rule
   skips it and keeps the shields.io graphic clean.
-- **No double-icon** — `GoPkg` no longer renders an inline
-  `<Icon>`; the CSS rule provides the trailing glyph for
-  external links. Internal links (bare module references to
-  known projects) get no trailing icon — they render as
-  `<NuxtLink>` with relative hrefs that don't match the
-  `[href^="http" i]` selector.
+- **No double-icon** — `GoPkg` and `NpmPkg` do not render an
+  inline `<Icon>`; the CSS rule provides the trailing glyph
+  for external links. Internal links (references to known
+  projects) get no trailing icon — they render as `<NuxtLink>`
+  with relative hrefs that don't match the `[href^="http" i]`
+  selector.
 
 Adding a new brand: append a `{ name, host }` entry to
 `DEFAULT_BRANDS` in `modules/external-link-icons.ts`, or
